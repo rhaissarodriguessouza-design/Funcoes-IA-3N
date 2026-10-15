@@ -52,6 +52,7 @@ function mostraPergunta() {
     mostraResultado();
     return;
   }
+
   perguntaAtual = perguntas[atual];
   caixaPerguntas.textContent = perguntaAtual.enunciado;
   caixaAlternativas.textContent = "";
@@ -59,18 +60,30 @@ function mostraPergunta() {
 }
 
 function mostraAlternativas() {
-  for (const alternativa of perguntaAtual.alternativas) {
+  perguntaAtual.alternativas.forEach((alternativa) => {
     const botaoAlternativas = document.createElement("button");
     botaoAlternativas.textContent = alternativa;
+    botaoAlternativas.type = "button";
+    botaoAlternativas.addEventListener("click", () => respostaSelecionada(alternativa));
     caixaAlternativas.appendChild(botaoAlternativas);
-  }
+  });
 }
 
-botao.addEventListener("click", () => respostaSelecionada(opcao));
-
 function respostaSelecionada(opcaoSelecionada) {
-  const afirmacoes = opcaoSelecionada.afirmacoes;
-  historiaFinal += afirmacoes + " ";
+  if (opcaoSelecionada) {
+    historiaFinal += opcaoSelecionada + " ";
+  }
+
   atual++;
   mostraPergunta();
 }
+
+function mostraResultado() {
+  caixaPerguntas.textContent = "Conclusão da sua reflexão sobre a IA";
+  caixaAlternativas.textContent = "";
+  textoResultado.textContent =
+    historiaFinal.trim() || "Você ainda precisa refletir mais sobre as implicações da IA.";
+  caixaResultado.style.display = "block";
+}
+
+mostraPergunta();
